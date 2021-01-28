@@ -1,6 +1,6 @@
 #include <LT8500.h>
 
-LT8500 lt(5,3);
+LT8500 lt(5,19);
 
 uint8_t testBuffer[72];
 void array_set(uint8_t channel, uint16_t value);
@@ -9,9 +9,13 @@ void setup() {
 #ifdef __AVR_ATtinyx17__
   // Clock output on PB5
   _PROTECTED_WRITE(CLKCTRL.MCLKCTRLA, 1 << 7);
+
+  pinMode(17, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(17), soft_reset, FALLING);
 #endif
 
   Serial.begin(115200);
+  
   // put your setup code here, to run once:
   lt.begin();
   
@@ -31,6 +35,12 @@ void setup() {
   lt.sendFrame(testBuffer, CMD_OUT_ENABLE);
   delay(1);
 }
+
+#ifdef __AVR_ATtinyx17__
+void soft_reset() {
+  _PROTECTED_WRITE(RSTCTRL.SWRR,1);
+}
+#endif
 
 int16_t i = 0;
 bool i_down = false;

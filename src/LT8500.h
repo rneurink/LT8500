@@ -55,6 +55,11 @@ private:
     
     uint8_t Status_buffer[73];
 
+#if defined(__AVR_ATtinyxy7__)
+    uint8_t LDI_bit_mask;
+    PORT_t *LDI_port;
+#endif
+
 //Functions
 public:
     LT8500(int8_t LDI_Blank, int8_t SDO, int8_t N_OpenLED = -1);
@@ -68,6 +73,9 @@ public:
 //private:
 
     bool sendFrame(uint8_t *buffer, uint8_t command);
+    void sendLDIPulse();
+    void blankPulse();
+    void resetPulse();
 };
 
 
