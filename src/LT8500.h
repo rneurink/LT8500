@@ -67,15 +67,17 @@ public:
     void begin();
     void end();
 
-    void blank();
+    void reset();
+
+    void enableOutput();
+    void disableOutput();
 
 //protected:
 //private:
 
     bool sendFrame(uint8_t *buffer, uint8_t command);
     void sendLDIPulse();
-    void blankPulse();
-    void resetPulse();
+    void sendResetPulse();
 };
 
 

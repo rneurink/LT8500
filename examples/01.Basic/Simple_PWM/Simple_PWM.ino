@@ -18,22 +18,7 @@ void setup() {
   
   // put your setup code here, to run once:
   lt.begin();
-  
-  testBuffer[0] = 0x00;
-  testBuffer[1] = 0x00;
-  
-  lt.sendFrame(testBuffer, CMD_CORRECTION);
-  delay(1);
-  lt.sendFrame(testBuffer, CMD_CORRECTION_TOGGLE);
-  delay(1);
-
-  testBuffer[0] = 0x00;
-  testBuffer[1] = 0x00;
-
-  lt.sendFrame(testBuffer, CMD_SYNC_UPDATE);
-  delay(1);
-  lt.sendFrame(testBuffer, CMD_OUT_ENABLE);
-  delay(1);
+  lt.enableOutput();
 }
 
 #ifdef __AVR_ATtinyx17__
@@ -47,17 +32,7 @@ bool i_down = false;
 
 void loop() {
   // put your main code here, to run repeatedly:
-  //lt.sendFrame(testBuffer, CMD_SELF_TEST);    
   array_set(0,i);
-  // Serial.print(i, DEC);
-  // Serial.print(" ");
-  // Serial.print(testBuffer[1], HEX);
-  // Serial.print(" ");
-  // Serial.print(testBuffer[0], HEX);
-  // Serial.print(" ");
-  // Serial.print(i_down, DEC);
-  // Serial.print(" ");
-  // Serial.println();
   lt.sendFrame(testBuffer, CMD_SYNC_UPDATE);
   if (i_down) {
     i -= 8;
@@ -72,7 +47,7 @@ void loop() {
       i_down = true;
     }
   }
-  delay(5);
+  delay(1);
 }
 
 void array_set(uint8_t channel, uint16_t value)

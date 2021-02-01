@@ -25,25 +25,43 @@ void LT8500::begin() {
 
     SPI.begin();
 
+    // Reset the chip
     digitalWrite(LT8500_LDIBLANK, HIGH); // keep the chip in reset state
     delayMicroseconds(500);
     digitalWrite(LT8500_LDIBLANK, LOW); // assert reset low to start up the chip
-    while (digitalRead(LT8500_SDO) != LOW) {} // wait for the chip to start up
+    while (digitalRead(LT8500_SDO) != LOW) {} // wait for the chip to start up //TODO: add timout
+    
     // enable the PWM clock
 
     // Initialize the correction registers
+    sendFrame(Correction_buffer, CMD_CORRECTION);
+    delay(1);
+    sendFrame(Correction_buffer, CMD_CORRECTION_TOGGLE); // Correction enabled by default, so disable it
+    delay(1);
 
     // update frame
-
-    // enable outputs
+    sendFrame(PWM_buffer, CMD_SYNC_UPDATE);
+    delay(1);
 }
 
 void LT8500::end() {
     SPI.end();
 }
 
-void LT8500::blank() {
+void LT8500::reset() {
+    sendResetPulse();
+}
 
+void LT8500::enableOutput() {
+    // enable outputs
+    sendFrame(PWM_buffer, CMD_OUT_ENABLE);
+    delay(1);
+}
+
+void LT8500::disableOutput() {
+    // disable outputs
+    sendFrame(PWM_buffer, CMD_OUT_DISABLE);
+    delay(1);
 }
 
 bool LT8500::sendFrame(uint8_t *buffer, uint8_t command) {
@@ -73,21 +91,7 @@ void LT8500::sendLDIPulse() {
 
 }
 
-void LT8500::blankPulse() {
-
-#if defined (__AVR_ATtinyxy7__)
-    LDI_port->OUTSET = LDI_bit_mask;
-    delayMicroseconds(5);
-    LDI_port->OUTCLR = LDI_bit_mask;
-#else
-    digitalWrite(LT8500_LDIBLANK, HIGH);
-    delayMicroseconds(5);
-    digitalWrite(LT8500_LDIBLANK, LOW);
-#endif
-
-}
-
-void LT8500::resetPulse() {
+void LT8500::sendResetPulse() {
 
 #if defined (__AVR_ATtinyxy7__)
     LDI_port->OUTSET = LDI_bit_mask;
