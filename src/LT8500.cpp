@@ -93,7 +93,7 @@ void LT8500::reset() {
 /**
  * @brief Sets the PWM value of a channel
  * 
- * @param channel the channel to set the value of (from 0 to 47)
+ * @param channel the channel to set the value of (from 1 to 48)
  * @param pwm the PWM value to set in the channel (from 0 to 4095)
  */
 void LT8500::setPWM(uint8_t channel, uint16_t pwm) {
@@ -101,38 +101,38 @@ void LT8500::setPWM(uint8_t channel, uint16_t pwm) {
     // on an even channel (0, 2, 4 etc) it will take up the complete lower byte (lsB) and half of the upper byte (msB)
     // as 12 bits is 1.5 times 8 bits this is used as a multiplier. (int will be rounded down)
     // on an odd channel (1, 3, 5 etc) it will take up half of the lower byte and the complete upper byte
-    pack12to8(PWM_buffer, channel, pwm);
+    pack12to8(PWM_buffer, channel - 1, pwm);
 }
 
 /**
  * @brief Retrieves the PWM value of a channel from the buffer
  * 
- * @param channel the channel to get the value from (from 0 to 47)
+ * @param channel the channel to get the value from (from 1 to 48)
  * @return uint16_t the PWM value (from 0 to 4095)
  */
 uint16_t LT8500::getPWM(uint8_t channel) {
-    return unpack12to8(PWM_buffer, channel);
+    return unpack12to8(PWM_buffer, channel - 1);
 }
 
 /**
  * @brief Sets the correction data of a channel
  * 
- * @param channel the channel to set the correction value of (from 0 to 47)
+ * @param channel the channel to set the correction value of (from 1 to 48)
  * @param correction the correction value to set in the channel (from 0 to 63)
  */
 void LT8500::setCorrection(uint8_t channel, uint8_t correction) {
     // Using a packet buffer to deal with the 6 bits of correction per channel
-    pack6to8(Correction_buffer, channel, correction);
+    pack6to8(Correction_buffer, channel - 1, correction);
 }
 
 /**
  * @brief Retrieves the correction value of a channel from the buffer
  * 
- * @param channel the channel to get the value from (from 0 to 47)
+ * @param channel the channel to get the value from (from 1 to 48)
  * @return uint8_t the correction value (from 0 to 63)
  */
 uint8_t LT8500::getCorrection(uint8_t channel) {
-    return unpack6to8(Correction_buffer, channel);
+    return unpack6to8(Correction_buffer, channel - 1);
 }
 
 /**
