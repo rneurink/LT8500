@@ -36,3 +36,5 @@
 .vscode/
 
 build/*
+.development
+doc/html

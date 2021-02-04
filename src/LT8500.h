@@ -3,26 +3,27 @@
  * @author Ruben Neurink-Sluiman (ruben.neurink@gmail.com)
  * @brief Arduino library for driving the LT8500
  * @version 0.1
- * @date 2021-01-12
+ * @date 2021-02-02
  * 
  * @copyright Copyright (c) 2021
  * 
  * https://www.analog.com/media/en/technical-documentation/data-sheets/LT8500.pdf 
  * 
- * LT8500 Description
- * 48 independent channel PWM generator
- * 12-bit resolution
- * 50MHz cascadable serial interface
- * 
- * 3-5.5V input voltage
- * 6-bit PWM correction
- * Up to 6.1kHz PWM frequency with PWMCK at 25MHz
- * Phase shift option to reduce input currents
- * 
- * 
- * TODO:
+ * LT8500 Description: \n
+ * 48 independent channel PWM generator \n
+ * 12-bit resolution \n
+ * 50MHz cascadable serial interface \n
+ * \n
+ * 3-5.5V input voltage \n
+ * 6-bit PWM correction \n
+ * Up to 6.1kHz PWM frequency with PWMCK at 25MHz \n
+ * Phase shift option to reduce input currents \n
+ * \n
+ * \n
+ * \b TODO:
  * - add self test
  * - add port manipulation for SAMD, ESP32 and Atmega328 to speed up the commands
+ * - add examples
  */
 
 #ifndef __LT8500_H
@@ -32,14 +33,22 @@
 #include <SPI.h>
 
 // CMD make sure not to send 0x8X as it is a reserved command
-#define CMD_SYNC_UPDATE 0x00 // Update PWM’s Synchronously to PWM Period
-#define CMD_ASYNC_UPDATE 0x10 // Update PWM’s Asynchronously to PWM Period
-#define CMD_CORRECTION 0x20 // Set PWM Correction Factor 
-#define CMD_OUT_ENABLE 0x30 // Enable PWM Outputs
-#define CMD_OUT_DISABLE 0x40 // Disable (Drive Low) PWM Outputs
-#define CMD_SELF_TEST 0x50 // Initiates Self Test
-#define CMD_PHASE_TOGGLE 0x60 // Toggle 16-Channel Bank 120° Phase-Shift (PHS) 
-#define CMD_CORRECTION_TOGGLE 0x70 // Toggle Correction Disable Bit in Multiplier (CRD) 
+/** Update PWM’s Synchronously to PWM Period */
+#define CMD_SYNC_UPDATE 0x00 
+/** Update PWM’s Asynchronously to PWM Period */
+#define CMD_ASYNC_UPDATE 0x10 
+/** Set PWM Correction Factor */
+#define CMD_CORRECTION 0x20
+/** Enable PWM Outputs */
+#define CMD_OUT_ENABLE 0x30
+/** Disable (Drive Low) PWM Outputs */
+#define CMD_OUT_DISABLE 0x40
+/** Initiates Self Test */
+#define CMD_SELF_TEST 0x50
+/** Toggle 16-Channel Bank 120° Phase-Shift (PHS) */
+#define CMD_PHASE_TOGGLE 0x60
+/** Toggle Correction Disable Bit in Multiplier (CRD) */
+#define CMD_CORRECTION_TOGGLE 0x70 
 
 /**
  * LT8500 power up:
@@ -48,12 +57,12 @@
  *  3. Send an update frame
  *  4. Send an output enable frame
  * 
- * The correction is enabled by default
- * The phase shifting is disabled by default
- * 
- * The correction value is applied as following:
- * PWM(corrected) = PWM * (2/3) * ((Correction + 32)/64)
- * This correction sets a multiplier of about 0.5 times to 1.5 times the PWM value
+ * The correction is \b enabled by default \n
+ * The phase shifting is \b disabled by default \n
+ * \n
+ * The correction value is applied as following: \n
+ * PWM(corrected) = PWM * (2/3) * ((Correction + 32)/64) \n
+ * This correction sets a multiplier of about 0.5 times to 1.5 times the PWM value \n
  * 
  */
 
@@ -73,6 +82,9 @@ private:
     
     uint8_t Frame_buffer[72];
 
+    bool Correction_Enabled = true;
+    bool PhaseShift_Enabled = false;
+
 #if defined(__AVR_ATtinyxy7__)
     uint8_t LDI_bit_mask;
     PORT_t *LDI_port;
@@ -89,7 +101,9 @@ public:
     void reset();
 
     void setPWM(uint8_t channel, uint16_t pwm);
+    uint16_t getPWM(uint8_t channel);
     void setCorrection(uint8_t channel, uint8_t correction);
+    uint8_t getCorrection(uint8_t channel);
 
     void sendSyncFrame();
     void sendAsyncFrame();

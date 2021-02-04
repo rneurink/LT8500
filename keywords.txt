@@ -13,7 +13,21 @@ LT8500	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
-
+begin	KEYWORD2
+end	KEYWORD2
+reset	KEYWORD2
+setPWM	KEYWORD2
+getPWM	KEYWORD2
+setCorrection	KEYWORD2
+getCorrection	KEYWORD2
+sendSyncFrame	KEYWORD2
+sendAsyncFrame	KEYWORD2
+sendCorrectionFrame	KEYWORD2
+enableOutput	KEYWORD2
+disableOutput	KEYWORD2
+toggleCorrection	KEYWORD2
+togglePhaseShift	KEYWORD2
+selfTest	KEYWORD2
 
 #######################################
 # Structures (KEYWORD3)
@@ -25,4 +39,11 @@ LT8500	KEYWORD1
 # Constants (LITERAL1)
 #######################################
 
-
+CMD_SYNC_UPDATE	LITERAL1
+CMD_ASYNC_UPDATE	LITERAL1
+CMD_CORRECTION	LITERAL1
+CMD_OUT_ENABLE	LITERAL1
+CMD_OUT_DISABLE	LITERAL1
+CMD_SELF_TEST	LITERAL1
+CMD_PHASE_TOGGLE	LITERAL1
+CMD_CORRECTION_TOGGLE	LITERAL1

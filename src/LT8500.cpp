@@ -1,7 +1,7 @@
 /**
  * @file LT8500.cpp
  * @author Ruben Neurink-Sluiman (ruben.neurink@gmail.com)
- * @brief 
+ * @brief Arduino library for driving the LT8500 CPP
  * @version 0.1
  * @date 2021-02-02
  * 
@@ -66,6 +66,7 @@ void LT8500::begin() {
     sendCorrectionFrame();
     delay(1);
     toggleCorrection(); // Correction enabled by default, so disable it
+    Correction_Enabled = false;
     delay(1);
 
     // update frame
@@ -104,6 +105,16 @@ void LT8500::setPWM(uint8_t channel, uint16_t pwm) {
 }
 
 /**
+ * @brief Retrieves the PWM value of a channel from the buffer
+ * 
+ * @param channel the channel to get the value from (from 0 to 47)
+ * @return uint16_t the PWM value (from 0 to 4095)
+ */
+uint16_t LT8500::getPWM(uint8_t channel) {
+    return unpack12to8(PWM_buffer, channel);
+}
+
+/**
  * @brief Sets the correction data of a channel
  * 
  * @param channel the channel to set the correction value of (from 0 to 47)
@@ -112,6 +123,16 @@ void LT8500::setPWM(uint8_t channel, uint16_t pwm) {
 void LT8500::setCorrection(uint8_t channel, uint8_t correction) {
     // Using a packet buffer to deal with the 6 bits of correction per channel
     pack6to8(Correction_buffer, channel, correction);
+}
+
+/**
+ * @brief Retrieves the correction value of a channel from the buffer
+ * 
+ * @param channel the channel to get the value from (from 0 to 47)
+ * @return uint8_t the correction value (from 0 to 63)
+ */
+uint8_t LT8500::getCorrection(uint8_t channel) {
+    return unpack6to8(Correction_buffer, channel);
 }
 
 /**
@@ -221,6 +242,8 @@ void LT8500::toggleCorrection() {
     sendLDIPulse();
 
     SPI.endTransaction();
+
+    Correction_Enabled = !Correction_Enabled;
 }
 
 /**
@@ -238,6 +261,8 @@ void LT8500::togglePhaseShift() {
     sendLDIPulse();
 
     SPI.endTransaction();
+
+    PhaseShift_Enabled = !PhaseShift_Enabled;
 }
 
 /**
@@ -255,11 +280,11 @@ void LT8500::selfTest() {
 void LT8500::sendLDIPulse() {
 
 #if defined (__AVR_ATtinyxy7__)
-    LDI_port->OUTSET = LDI_bit_mask;
+    LDI_port->OUTSET = LDI_bit_mask; // about 670 ns
     delayMicroseconds(1);
     LDI_port->OUTCLR = LDI_bit_mask;
 #else
-    digitalWrite(LT8500_LDIBLANK, HIGH);
+    digitalWrite(LT8500_LDIBLANK, HIGH); // DigitalWrite is approx 3us on a 20MHz clock
     digitalWrite(LT8500_LDIBLANK, LOW);
 #endif
 
