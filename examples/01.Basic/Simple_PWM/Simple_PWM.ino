@@ -37,12 +37,12 @@ void soft_reset() {
 void loop() {
   // Looping from duty cycle 0% to 100% and back to 0%
   for (int i = 0; i < 4096; i+=8) {
-    lt.setPWM(0, i); // Sets the PWM value in the buffer
-    lt.sendSyncFrame(); // Sends the PWM buffer to the chip
+    lt.setPWM(1, i); // Sets the PWM value in the buffer
+    lt.sendSyncFrame(); // Sends the PWM buffer to the chip0
     delay(1);
   }
   for (int i = 4095; i >= 0; i-=8) {
-    lt.setPWM(0, i); // Sets the PWM value in the buffer
+    lt.setPWM(1, i); // Sets the PWM value in the buffer
     lt.sendSyncFrame(); // Sends the PWM buffer to the chip
     delay(1);
   }
