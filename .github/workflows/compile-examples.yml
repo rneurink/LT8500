@@ -40,7 +40,6 @@ jobs:
           {"fqbn": "megaTinyCore:megaavr:atxy7:chip=3217", "type": "Attiny3217"},
           {"fqbn": "adafruit:samd:adafruit_itsybitsy_m0", "type": "ItsyBitsy M0"},
           {"fqbn": "adafruit:samd:adafruit_itsybitsy_m4", "type": "ItsyBitsy M4"},
-#          {"fqbn": "MegaCoreX:megaavr:4809", "type": "Atmega4809"},
           {"fqbn": "esp32:esp32:esp32", "type": "ESP32 Dev module"}
         ]
 
@@ -62,9 +61,6 @@ jobs:
             # Install Adafruit SAMD
             - name: "adafruit:samd"
               source-url: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
-#            # Install MegaCoreX
-#            - name: "MegaCoreX:megaavr"
-#              source-url: https://mcudude.github.io/MegaCoreX/package_MCUdude_MegaCoreX_index.json
             # Install megaTinyCore via Boards Manager for the toolchain
             - name: "megaTinyCore:megaavr"
               source-url: http://drazzy.com/package_drazzy.com_index.json

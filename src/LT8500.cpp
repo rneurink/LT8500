@@ -48,8 +48,11 @@ void LT8500::begin() {
 
     pinMode(LT8500_LDIBLANK, OUTPUT);
     pinMode(LT8500_SDO, INPUT);
-    pinMode(LT8500_N_OPENLED, INPUT);
-
+    if (LT8500_N_OPENLED != -1)
+    {
+        pinMode(LT8500_N_OPENLED, INPUT);
+    }
+    
     memset(PWM_buffer, 0, sizeof(PWM_buffer));
 
     SPI.begin();
